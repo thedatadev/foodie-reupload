@@ -1,0 +1,117 @@
+/* General styling */
+* {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  text-decoration: none;
+  font-family: Arial;
+}
+.header, .analysis {
+  box-shadow: 0 3px 8px #ccc;
+  border-radius: 6px;
+  margin-bottom: 18px;
+}
+
+/* Container styling */
+.container {
+  display: block;
+  width: 90%;
+  max-width: 768px;
+  margin: 25px auto;
+}
+
+/* Header */
+.header {
+  padding: 10px;
+  position: relative;
+}
+.header > * {
+  display: inline-block;
+}
+.header-details {
+  overflow: auto;
+  float: right;
+  margin: 12px 0 0 0;
+  color: white;
+  padding-right: 12px;
+}
+.header-details > * {
+  margin: 6px 0;
+}
+.header-logo {
+  width: 25%;
+  height: 25%;
+  border-radius: 50%;
+  background-color: rgb(57, 104, 182);
+  color: white;
+  margin: 10px 0 0 6%;
+  border: 3px solid white;
+}
+.header-detail-label {
+  color: coral;
+  font-weight: bold;
+}
+#header-background {
+  position: absolute;
+  width: 100%;
+  height: 65%;
+  background-color: rgb(44, 60, 130);
+  top: 0;
+  left: 0;
+  z-index: -1;
+}
+
+/* Analysis */
+.analysis-header {
+  margin-bottom: 12px;
+  background-color: rgb(44, 60, 130);
+  color: white;
+  padding-bottom: 12px;
+}
+.analysis-header > p {
+  font-size: 1.6em;
+  display: inline-block;
+  height: 100%;
+  margin: 4% 4% 1% 10%;
+  padding-bottom: 6px;
+  border-bottom: 4px solid coral;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* end */

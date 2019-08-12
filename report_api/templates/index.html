@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Foodie | User report</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+    <script src="{{ url_for('static', filename='js/moment.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/Chart.min.js') }}"></script>
+  </head>
+  <body>
+
+    <div class="container">
+
+      <!-- Header
+
+    - Foodie logo
+    - user details
+    - report date
+    - option to download as pdf or image
+
+    END Header -->
+    <div class="header">
+      <!-- Foodie logo -->
+      <img class="header-logo" src="{{ url_for('static', filename='img/foodie-logo.png') }}" alt="">
+      <!-- User details -->
+      <div class="header-details">
+        <div class="header-top-user">
+          <p><span class="header-detail-label">User:</span> {{name}}</p>
+        </div>
+        <!-- Report date -->
+        <div class="header-bottom-date">
+          <p><span class="header-detail-label">Date:</span> {{todays_date}}</p>
+        </div>
+        <!-- Option to download as pdf or image -->
+        <!-- <div class="header-bottom-download">
+          <span class="header-detail-label">Download PDF</span>
+        </div> -->
+      </div>
+      <div id="header-background"></div>
+
+    </div>
+
+
+
+
+    <!-- Diet analysis over the past X number of days, weeks or months
+
+    - a graph with x-axis (time) and y-axis (calorie intake)
+    - contrast actual intake against recommended intake
+    - interactivity:
+      - each day is represented as a column
+      - when a user taps or clicks on a column (day), a panel displays
+        the food diary for that particular day
+      - the panel lists the food diaries in chronological order of consumption
+      - food with relatively high calories should be indicated with red,
+        while lower calorie foods should be indicated with green
+      - food diary entries will not contain images
+
+    END Diet Analysis -->
+    <div class="analysis">
+      <!-- Analysis header -->
+      <div class="analysis-header">
+        <p>Calorie intake</p>
+      </div>
+      <!-- Analysis graph -->
+      <div class="analysis-graph">
+        <canvas id="caloriesAnalysisCanvas" width="100" height="60"></canvas>
+      </div>
+    </div>
+
+    <!-- Nutrient analysis -->
+    <div class="analysis">
+      <!-- Analysis header -->
+      <div class="analysis-header">
+        <p>Nutrient analysis</p>
+      </div>
+      <!-- Analysis graph -->
+      <div class="analysis-graph">
+        <canvas id="nutrientAnalysisCanvas" width="100" height="60"></canvas>
+      </div>
+    </div>
+
+    </div>
+
+
+    <script type="text/javascript">
+      document.addEventListener("DOMContentLoaded", function() {
+
+        const dataset = JSON.parse({{ dataset | tojson }});
+
+        let calorieData = {
+          datasets: [
+            {
+              label: "Calorie intake",
+              backgroundColor: "rgba(99, 194, 255, 0.2)" ,
+              borderColor: "rgba(99, 143, 255, 1)",
+              borderWidth: 1,
+              hoverBackgroundColor: "rgba(99, 194, 255, 0.15)",
+              hoverBorderColor: "rgba(99, 143, 255, 0.85)",
+              data: dataset,
+              scaleOverride: false,
+              scaleSteps: 0,
+              scaleStartValue: 0,
+              scaleStepWidth: 1
+            }
+          ]
+        }
+
+        let caloriesAnalysisConfig = {
+          type: 'line',
+          data: calorieData,
+          options: {
+            scales: {
+              yAxes: [{
+                scaleLabel: {
+                  display: true,
+                }
+              }],
+              xAxes: [{
+                type: 'time',
+                autoSkip: false,
+                time: {
+                    unit: JSON.parse({{ display_unit | tojson }}),
+                    unitStepSize: 1
+                },
+                scaleLabel: {
+                  display: true
+                },
+              }]
+            }
+          }
+        }
+
+        let nutrientAnalysisConfig = {
+          type: 'pie',
+          data: {
+            datasets: [{
+              data: JSON.parse({{ nutrient_data | tojson }}),
+              backgroundColor: JSON.parse({{ nutrient_colours | tojson }}),
+              // data: [ 18, 6, 13, 16, 19, 20, 8 ],
+              // backgroundColor: [
+              //   // TODO: check whether colours can be picked automatically
+              //   "rgb(251, 126, 79)",
+              //   "rgb(245, 161, 83)",
+              //   "rgb(242, 216, 79)",
+              //   "rgb(161, 223, 106)",
+              //   "rgb(90, 181, 247)",
+              //   "rgb(195, 143, 249)",
+              //   "rgb(251, 156, 242)"
+              // ],
+              label: 'Nutrient distribution'
+            }],
+            labels: JSON.parse({{ nutrient_labels | tojson }})
+            // labels: [
+            //   'Carbohyrates',
+            //   'Fats',
+            //   'Fiber',
+            //   'Minerals',
+            //   'Proteins',
+            //   'Vitamins',
+            //   'Water'
+            // ]
+          },
+          options: {
+            responsive: true,
+            legend: {
+              display: true,
+              position: 'right'
+            }
+          }
+        };
+
+        const caloriesAnalysisCanvas = document.getElementById("caloriesAnalysisCanvas").getContext('2d');
+        const nutrientAnalysisCanvas = document.getElementById('nutrientAnalysisCanvas').getContext('2d');
+
+        let caloriesAnalysisChart = new Chart(caloriesAnalysisCanvas, caloriesAnalysisConfig);
+        let nutrientAnalysisChart = new Chart(nutrientAnalysisCanvas, nutrientAnalysisConfig);
+
+
+      });
+
+    </script>
+
+  </body>
+</html>
